@@ -1,0 +1,6 @@
+.venv/
+Simulation/sim3D.py
+.vscode/
+__pycache__/
+Serial-Oscilloscope-v1.5/
+test.py
