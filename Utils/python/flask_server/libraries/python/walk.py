@@ -3,8 +3,6 @@ import sys
 import time
 
 import numpy as np
-libraries_dir = os.path.abspath(os.path.join(__file__, "../libraries/python"))
-sys.path.append(libraries_dir)
 from kinematics import inverse_kinematics
 from serial_comm import SerialComm
 
@@ -29,13 +27,10 @@ class Walk:
         self.halfStepLengthsX = [STEP_LENGTH_X / 2] * 4  # Step lengths for each leg in X direction
         self.halfStepLengthsY = [STEP_LENGTH_Y / 2] * 4  # Step lengths for each leg in Y direction
         self.foot_positions = FOOT_POSITIONS_WALK
-        self.should_stop=False
-
-    def stop(self):
         self.should_stop=True
 
-
     def reset(self, leg_deltas=[[0, 0], [0, 0], [0, 0], [0, 0]], foot_positions=None):
+        self.should_stop=False
         if foot_positions is None:
             foot_positions = self.foot_positions
         theta_knee = []
@@ -100,9 +95,7 @@ class Walk:
 
     def walk(self, leg_deltas=[[0, 0], [0, 0], [0, 0], [0, 0]], duration=10):
         start_time = time.perf_counter()
-        self.should_stop=False
-
-        while (time.perf_counter() - start_time) < duration and not self.should_stop:
+        while (time.perf_counter() - start_time) < duration:
             start_time_2 = time.perf_counter()
             self.walk_one_interpolation_step(leg_deltas)
             time.sleep(max(0, DELAY - (time.perf_counter() - start_time_2)))
@@ -118,4 +111,5 @@ class Walk:
         if update_foot_position_walk:
             self.foot_positions = new_leg_positions
 
- 
+    def stop(self):
+        self.should_stop=True
