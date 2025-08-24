@@ -33,6 +33,7 @@ class SerialComm:
         if self.is_open():
             try:
                 self.ser.write((str(data) + "\n").encode("utf-8"))
+                print(data)
             except Exception as e:
                 print(f"[ERROR] Failed to write line: {e}")
 
